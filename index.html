@@ -36,7 +36,6 @@ body{position:relative;isolation:isolate;overflow-x:hidden}
 .cloud.c3{top:63%;left:3%;transform:scale(.65);opacity:.48}
 .cloud.c4{top:82%;right:7%;transform:scale(.9);opacity:.52}
 .cloud.c5{top:5%;right:26%;transform:scale(.48);opacity:.45}
-
 </style>
 </head>
 <body>
@@ -58,9 +57,9 @@ body{position:relative;isolation:isolate;overflow-x:hidden}
         <div class="card-head"><div><h2>Build your journey</h2><p>Select your route and flight details below.</p></div><span class="step">01</span></div>
         <div class="form-body">
           <div class="route-fields">
-            <div class="field-wrap"><label class="field-label" for="origin">From Airport</label><select id="origin" aria-describedby="originHint"></select><div class="airport-hint" id="originHint">Toronto Pearson International</div></div>
+            <div class="field-wrap"><label class="field-label" for="origin">From Airport</label><select id="origin" aria-describedby="originHint"><option value="YYZ">YYZ — Toronto (Toronto Pearson International)</option></select><div class="airport-hint" id="originHint">Toronto Pearson International</div></div>
             <button class="swap" id="swap" type="button" aria-label="Swap departure and arrival airports" title="Swap airports">⇄</button>
-            <div class="field-wrap"><label class="field-label" for="destination">To Airport</label><select id="destination" aria-describedby="destinationHint"></select><div class="airport-hint" id="destinationHint">London Heathrow</div></div>
+            <div class="field-wrap"><label class="field-label" for="destination">To Airport</label><select id="destination" aria-describedby="destinationHint"><option value="LHR">LHR — London (London Heathrow)</option></select><div class="airport-hint" id="destinationHint">London Heathrow</div></div>
           </div>
           <div class="options">
             <div class="control"><label for="cabin">Cabin class</label><select id="cabin"><option value="1">Economy</option><option value="1.5">Premium economy</option><option value="2.9">Business</option><option value="4">First</option></select></div>
@@ -110,85 +109,8 @@ body{position:relative;isolation:isolate;overflow-x:hidden}
       <div class="method"><strong>About this estimate</strong><br>Uses a great-circle route distance with a 8% routing uplift and an illustrative economy factor of 90 g CO₂e per passenger-kilometre, adjusted by cabin class. Car comparison is based on an average gasoline passenger vehicle (~0.192 kg CO₂e/km) and home heating based on typical daily residential heating energy emissions (~12 kg CO₂e/day).</div>
     </aside>
   </div>
-  <footer class="footer"><span>© 2026 Flightpath · Travel thoughtfully.</span><span>Built with vanilla HTML, CSS & JavaScript · <a href="https://www.iata.org/en/publications/directories/code-search/" target="_blank" rel="noreferrer">About IATA codes ↗</a></span></footer>
+  <footer class="footer"><span>© 2026 Flightpath · Travel thoughtfully.</span><span>Built with vanilla HTML & CSS · <a href="https://www.iata.org/en/publications/directories/code-search/" target="_blank" rel="noreferrer">About IATA codes ↗</a></span></footer>
 </main>
 </div>
-<script>
-const airports = {
- YYZ:{city:"Toronto",name:"Toronto Pearson International",lat:43.6777,lon:-79.6248},YTZ:{city:"Toronto",name:"Billy Bishop Toronto City",lat:43.6275,lon:-79.3962},
- YVR:{city:"Vancouver",name:"Vancouver International",lat:49.1967,lon:-123.1815},YUL:{city:"Montreal",name:"Montréal–Trudeau International",lat:45.4706,lon:-73.7408},YOW:{city:"Ottawa",name:"Ottawa International",lat:45.3225,lon:-75.6692},YYC:{city:"Calgary",name:"Calgary International",lat:51.1215,lon:-114.0076},YEG:{city:"Edmonton",name:"Edmonton International",lat:53.3097,lon:-113.5797},YWG:{city:"Winnipeg",name:"Winnipeg Richardson International",lat:49.9100,lon:-97.2399},YHZ:{city:"Halifax",name:"Halifax Stanfield International",lat:44.8808,lon:-63.5086},
- JFK:{city:"New York",name:"John F. Kennedy International",lat:40.6413,lon:-73.7781},LGA:{city:"New York",name:"LaGuardia Airport",lat:40.7769,lon:-73.8740},EWR:{city:"Newark",name:"Newark Liberty International",lat:40.6895,lon:-74.1745},LAX:{city:"Los Angeles",name:"Los Angeles International",lat:33.9416,lon:-118.4085},SFO:{city:"San Francisco",name:"San Francisco International",lat:37.6213,lon:-122.3790},ORD:{city:"Chicago",name:"O'Hare International",lat:41.9742,lon:-87.9073},MIA:{city:"Miami",name:"Miami International",lat:25.7959,lon:-80.2870},SEA:{city:"Seattle",name:"Seattle–Tacoma International",lat:47.4502,lon:-122.3088},BOS:{city:"Boston",name:"Logan International",lat:42.3656,lon:-71.0096},ATL:{city:"Atlanta",name:"Hartsfield–Jackson Atlanta International",lat:33.6407,lon:-84.4277},DFW:{city:"Dallas",name:"Dallas/Fort Worth International",lat:32.8998,lon:-97.0403},DEN:{city:"Denver",name:"Denver International",lat:39.8561,lon:-104.6737},IAD:{city:"Washington, D.C.",name:"Dulles International",lat:38.9531,lon:-77.4565},HNL:{city:"Honolulu",name:"Daniel K. Inouye International",lat:21.3187,lon:-157.9225},
- LHR:{city:"London",name:"London Heathrow",lat:51.4700,lon:-0.4543},LGW:{city:"London",name:"London Gatwick",lat:51.1537,lon:-0.1821},CDG:{city:"Paris",name:"Charles de Gaulle Airport",lat:49.0097,lon:2.5479},ORY:{city:"Paris",name:"Paris Orly Airport",lat:48.7262,lon:2.3652},FRA:{city:"Frankfurt",name:"Frankfurt Airport",lat:50.0379,lon:8.5622},AMS:{city:"Amsterdam",name:"Amsterdam Airport Schiphol",lat:52.3105,lon:4.7683},MAD:{city:"Madrid",name:"Adolfo Suárez Madrid–Barajas",lat:40.4983,lon:-3.5676},BCN:{city:"Barcelona",name:"Barcelona–El Prat Airport",lat:41.2974,lon:2.0833},FCO:{city:"Rome",name:"Leonardo da Vinci–Fiumicino",lat:41.8003,lon:12.2389},IST:{city:"Istanbul",name:"Istanbul Airport",lat:41.2753,lon:28.7519},DXB:{city:"Dubai",name:"Dubai International",lat:25.2532,lon:55.3657},DOH:{city:"Doha",name:"Hamad International",lat:25.2731,lon:51.6081},
- DEL:{city:"Delhi",name:"Indira Gandhi International",lat:28.5562,lon:77.1000},BOM:{city:"Mumbai",name:"Chhatrapati Shivaji Maharaj International",lat:19.0896,lon:72.8656},SIN:{city:"Singapore",name:"Singapore Changi Airport",lat:1.3644,lon:103.9915},HKG:{city:"Hong Kong",name:"Hong Kong International",lat:22.3080,lon:113.9185},NRT:{city:"Tokyo",name:"Narita International",lat:35.7720,lon:140.3929},HND:{city:"Tokyo",name:"Haneda Airport",lat:35.5494,lon:139.7798},ICN:{city:"Seoul",name:"Incheon International",lat:37.4602,lon:126.4407},PEK:{city:"Beijing",name:"Beijing Capital International",lat:40.0799,lon:116.6031},PVG:{city:"Shanghai",name:"Shanghai Pudong International",lat:31.1443,lon:121.8083},BKK:{city:"Bangkok",name:"Suvarnabhumi Airport",lat:13.6900,lon:100.7501},SYD:{city:"Sydney",name:"Sydney Kingsford Smith",lat:-33.9399,lon:151.1753},MEL:{city:"Melbourne",name:"Melbourne Airport",lat:-37.6733,lon:144.8433},AKL:{city:"Auckland",name:"Auckland Airport",lat:-37.0082,lon:174.7850},
- GRU:{city:"São Paulo",name:"São Paulo/Guarulhos International",lat:-23.4356,lon:-46.4731},MEX:{city:"Mexico City",name:"Mexico City International",lat:19.4363,lon:-99.0721},SCL:{city:"Santiago",name:"Arturo Merino Benítez International",lat:-33.3930,lon:-70.7858},JNB:{city:"Johannesburg",name:"O. R. Tambo International",lat:-26.1367,lon:28.2411},CAI:{city:"Cairo",name:"Cairo International",lat:30.1219,lon:31.4056},NBO:{city:"Nairobi",name:"Jomo Kenyatta International",lat:-1.3192,lon:36.9278}
-};
-const $ = id => document.getElementById(id);
-const originSelect=$("origin"), destSelect=$("destination");
-const fmt = n => Math.round(n).toLocaleString("en-CA");
-
-function populateAirports() {
-  const sortedCodes = Object.keys(airports).sort((a, b) => airports[a].city.localeCompare(airports[b].city));
-  const optionsHtml = sortedCodes.map(code => `<option value="${code}">${code} — ${airports[code].city} (${airports[code].name})</option>`).join('');
-  originSelect.innerHTML = optionsHtml;
-  destSelect.innerHTML = optionsHtml;
-  originSelect.value = "YYZ";
-  destSelect.value = "LHR";
-}
-
-function updateHint(select, hintId) {
-  const code = select.value;
-  const a = airports[code];
-  $(hintId).textContent = a ? a.name : "";
-}
-
-function haversine(a,b){const rad=x=>x*Math.PI/180;const dLat=rad(b.lat-a.lat),dLon=rad(b.lon-a.lon);const x=Math.sin(dLat/2)**2+Math.cos(rad(a.lat))*Math.cos(rad(b.lat))*Math.sin(dLon/2)**2;return 6371*2*Math.atan2(Math.sqrt(x),Math.sqrt(1-x))}
-
-function calculate(){
- const o=originSelect.value, d=destSelect.value, p=Number($("passengers").value), factor=Number($("cabin").value), round=$("roundTrip").checked;
- const err=$("error");err.classList.remove("show");
- if(!airports[o]){err.textContent="Please select a valid origin airport.";err.classList.add("show");return}
- if(!airports[d]){err.textContent="Please select a valid destination airport.";err.classList.add("show");return}
- if(o===d){err.textContent="Choose two different airports to calculate a flight.";err.classList.add("show");return}
- if(!Number.isInteger(p)||p<1||p>99){err.textContent="Enter a passenger count from 1 to 99.";err.classList.add("show");return}
- const a=airports[o],b=airports[d],distance=haversine(a,b),legs=round?2:1,adjustedDistance=distance*1.08*legs;
- 
- // Simplified planning factor: 90 g CO2e/passenger-km in economy, scaled for cabin class.
- const perPassenger=adjustedDistance*.09*factor,total=perPassenger*p, cabin=$("cabin").selectedOptions[0].text;
- 
- // Equivalents calculations (per passenger)
- // Gasoline car: ~0.192 kg CO2e per km
- const carKm = perPassenger / 0.192;
- // Home heating: ~12 kg CO2e per day
- const heatingDays = perPassenger / 12;
-
- $("resultTitle").textContent=`${a.city} → ${b.city} · ${round?"round trip":"one way"}`;
- $("emissions").innerHTML=`${fmt(total)} <span>kg CO₂e</span>`;
- $("perPassenger").textContent=`${p===1?"Per passenger":"All passengers"} · ${cabin}`;
- $("distance").textContent=fmt(distance*legs)+" km";$("distanceLabel").textContent=fmt(distance*legs)+" km";
- $("legs").textContent=legs;$("legsSub").textContent=round?"Return included":"One-way journey";
- $("perPerson").textContent=fmt(perPassenger)+" kg";$("allPeople").textContent=fmt(total)+" kg";
- $("originCode").textContent=o;$("destinationCode").textContent=d;$("originCity").textContent=a.city;$("destinationCity").textContent=b.city;
- $("routeDistance").textContent=fmt(distance)+" km";
- $("cabinLabel").textContent=`${factor.toFixed(1)}× · ${cabin}`;$("cabinBar").style.width=Math.min(100,factor/4*100)+"%";
- $("distanceBar").style.width=Math.min(100,distance/15000*100)+"%";
- $("comparisonText").innerHTML=`Your estimate is <strong>${fmt(perPassenger)} kg CO₂e per passenger</strong> for this ${round?"round-trip":"one-way"} journey in ${cabin.toLowerCase()}. Try another cabin class or switch on return flight to compare.`;
- 
- // Update equivalents display
- $("carEquiv").textContent = fmt(carKm) + " km";
- $("homeEquiv").textContent = Math.round(heatingDays) + " days";
-
- updateHint(originSelect,"originHint");updateHint(destSelect,"destinationHint");
-}
-
-// Initialize dropdowns on load
-populateAirports();
-
-originSelect.addEventListener("change",() => { updateHint(originSelect,"originHint"); calculate(); });
-destSelect.addEventListener("change",() => { updateHint(destSelect,"destinationHint"); calculate(); });
-$("swap").addEventListener("click",()=>{const v=originSelect.value;originSelect.value=destSelect.value;destSelect.value=v;calculate()});
-$("calculate").addEventListener("click",calculate);
-["cabin","passengers","roundTrip"].forEach(id=>$(id).addEventListener("change",calculate));
-calculate();
-</script>
 </body>
 </html>
