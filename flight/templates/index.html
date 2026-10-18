@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flightpath — Flight Emissions Dashboard</title>
+<style>
+:root{--ink:#12324a;--muted:#607d91;--line:#d4e8f5;--bg:#e8f6ff;--white:#fff;--teal:#38a6df;--teal-dark:#147bb5;--blue:#168bd0;--pale:#e4f5ff;--shadow:0 12px 34px rgba(28,104,151,.09)}
+*{box-sizing:border-box}body{margin:0;background:#dff2ff;color:var(--ink);font:15px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,input,select{font:inherit}button{cursor:pointer}.app{max-width:1440px;margin:auto;min-height:100vh}
+.topbar{height:78px;background:rgba(255,255,255,.96);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 clamp(20px,4vw,56px)}
+.brand{display:flex;align-items:center;gap:12px;font-size:21px;font-weight:800;letter-spacing:-.7px}.brand-mark{width:39px;height:39px;background:linear-gradient(145deg,#42b5ed,#1685c5);border-radius:12px;display:grid;place-items:center;color:#fff;box-shadow:0 6px 14px #168bd02b}.brand-mark svg{width:23px}.top-meta{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:13px}.live-dot{width:8px;height:8px;background:#38a6df;border-radius:50%}
+main{padding:38px clamp(20px,4vw,56px) 48px}.eyebrow{color:var(--teal-dark);font-size:11px;font-weight:800;letter-spacing:1.7px;text-transform:uppercase}
+.hero{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;margin-bottom:28px}.hero h1{font-size:clamp(30px,4vw,42px);letter-spacing:-1.8px;line-height:1.12;margin:8px 0 10px}.hero p{color:var(--muted);margin:0;max-width:600px}.tag{display:inline-flex;align-items:center;gap:8px;padding:9px 12px;background:#dff2ff;color:#147bb5;border-radius:999px;font-size:12px;font-weight:700;white-space:nowrap}
+.layout{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(300px,.9fr);gap:22px;align-items:start}.card{background:rgba(255,255,255,.97);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow)}.card-head{padding:24px 26px 0;display:flex;justify-content:space-between;align-items:flex-start;gap:14px}.card-head h2{margin:0;font-size:18px;letter-spacing:-.4px}.card-head p{margin:5px 0 0;color:var(--muted);font-size:13px}.step{width:31px;height:31px;border-radius:10px;background:#e4f5ff;color:var(--blue);display:grid;place-items:center;font-weight:800;font-size:13px}
+.form-body{padding:22px 26px 26px}.field-label{display:block;font-size:12px;font-weight:750;color:#52657a;margin-bottom:8px}.route-fields{display:grid;grid-template-columns:1fr 42px 1fr;gap:12px;align-items:end}.field-wrap{position:relative}.field-wrap select,.control input,.control select{width:100%;border:1px solid #d8e2ec;background:#fafdff;border-radius:11px;padding:13px 14px;color:var(--ink);outline:none;transition:border .15s,box-shadow .15s}.field-wrap select{font-size:15px;font-weight:700;cursor:pointer}.field-wrap select:focus,.control input:focus,.control select:focus{border-color:var(--teal);box-shadow:0 0 0 3px #168bd01b}.swap{height:46px;width:42px;border:1px solid var(--line);background:#fff;border-radius:12px;color:var(--teal-dark);font-size:20px;display:grid;place-items:center;margin-bottom:0}.swap:hover{background:var(--pale)}
+.airport-hint{font-size:11px;color:#8291a3;margin-top:7px;min-height:17px}.options{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:22px}.control label{display:block;font-size:12px;font-weight:750;color:#52657a;margin-bottom:8px}.control input,.control select{padding:12px 13px;font-size:14px}.inline-check{display:flex;align-items:center;gap:10px;margin:18px 0 22px;color:#43566b;font-size:13px}.inline-check input{width:16px;height:16px;accent-color:var(--teal)}.primary{width:100%;border:0;border-radius:12px;background:var(--teal);color:white;padding:14px 18px;font-weight:800;box-shadow:0 7px 15px #168bd02b;transition:transform .15s,background .15s}.primary:hover{background:var(--teal-dark);transform:translateY(-1px)}.error{display:none;color:#b42318;background:#fff2f0;border:1px solid #ffd5d0;border-radius:10px;padding:10px 12px;margin-top:12px;font-size:12px}.error.show{display:block}.fineprint{font-size:11px;color:#8b98a8;margin-top:13px;line-height:1.55}
+.results{overflow:hidden}.result-banner{padding:25px 26px 24px;background:linear-gradient(125deg,#168ac7,#1269a7);color:#fff;position:relative;overflow:hidden}.result-banner:after{content:"";position:absolute;width:210px;height:210px;border:1px solid #ffffff19;border-radius:50%;right:-55px;top:-90px;box-shadow:0 0 0 25px #ffffff08,0 0 0 52px #ffffff05}.result-banner .eyebrow{color:#e5f6ff}.result-banner h2{font-size:14px;font-weight:600;color:#e3f4ff;margin:7px 0 4px}.emissions{font-size:clamp(36px,4vw,48px);font-weight:850;letter-spacing:-2px;line-height:1.2;position:relative;z-index:1}.emissions span{font-size:14px;font-weight:600;letter-spacing:0;color:#e3f4ff}.banner-foot{margin-top:15px;display:flex;align-items:center;gap:9px;color:#e3f4ff;font-size:12px}.co2-dot{width:7px;height:7px;background:#a7e9ff;border-radius:50%}
+.stats{display:grid;grid-template-columns:1fr 1fr;padding:0 26px}.stat{padding:19px 0;border-bottom:1px solid var(--line)}.stat:nth-child(odd){padding-right:14px}.stat:nth-child(even){padding-left:17px;border-left:1px solid var(--line)}.stat-label{color:var(--muted);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px}.stat-value{font-size:20px;font-weight:800;letter-spacing:-.5px;margin-top:4px}.stat-sub{font-size:11px;color:#8796a7;margin-top:2px}
+.route-preview{padding:20px 26px 25px}.route-title{font-size:12px;font-weight:800;margin-bottom:16px}.route-line{display:flex;align-items:center;gap:12px}.airport-node{min-width:56px}.airport-code{font-size:20px;font-weight:850;letter-spacing:.3px}.airport-city{font-size:11px;color:var(--muted);max-width:100px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.flight-path{flex:1;position:relative;display:flex;align-items:center;justify-content:center;color:var(--teal)}.flight-path:before{content:"";position:absolute;left:0;right:0;border-top:1.5px dashed #8bd5f4}.plane{position:relative;background:#fff;padding:0 7px;font-size:19px;transform:rotate(0deg)}.route-bottom{display:flex;justify-content:space-between;margin-top:17px;padding-top:14px;border-top:1px solid var(--line);font-size:12px;color:var(--muted)}.route-bottom strong{color:var(--ink)}
+.breakdown{margin-top:22px;padding:23px 26px 25px}.breakdown h2{font-size:16px;margin:0}.breakdown .sub{font-size:12px;color:var(--muted);margin:5px 0 21px}.bar-label{display:flex;justify-content:space-between;gap:12px;font-size:12px;margin-bottom:8px}.bar-label strong{font-weight:800}.bar-track{height:9px;background:#e9eff4;border-radius:20px;overflow:hidden}.bar-fill{height:100%;width:0;background:linear-gradient(90deg,#168bd0,#72d0f5);border-radius:20px;transition:width .5s}.comparison{display:flex;gap:13px;align-items:flex-start;margin-top:20px;padding:14px;background:#edf8ff;border-radius:12px}.comparison .leaf{width:31px;height:31px;flex:0 0 31px;border-radius:9px;background:#dff2ff;color:#147bb5;display:grid;place-items:center}.comparison p{margin:0;font-size:12px;color:#52677b}.comparison strong{color:var(--ink)}
+.equivalents-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px}.equiv-card{background:#edf8ff;padding:16px;border-radius:14px;border:1px solid var(--line)}.equiv-icon{font-size:20px;margin-bottom:6px}.equiv-label{color:var(--muted);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px}.equiv-value{font-size:18px;font-weight:800;letter-spacing:-.5px;margin-top:4px;color:var(--ink)}.equiv-sub{font-size:11px;color:#8796a7;margin-top:2px}
+.method{margin-top:22px;padding:17px 19px;border:1px solid var(--line);border-radius:14px;color:var(--muted);font-size:11px;line-height:1.6}.method strong{color:#42566c}.footer{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-top:27px;color:#8a98a8;font-size:11px}.footer a{color:#60758b;text-decoration:none}.footer a:hover{text-decoration:underline}
+@media(max-width:850px){.layout{grid-template-columns:1fr}.hero{align-items:flex-start;flex-direction:column}.tag{white-space:normal}.results{display:grid;grid-template-columns:1fr}.top-meta .hide-small{display:none}}
+@media(max-width:520px){.topbar{height:68px}.brand{font-size:19px}main{padding-top:26px}.card-head,.form-body{padding-left:18px;padding-right:18px}.result-banner{padding:22px 19px}.stats{padding:0 19px}.route-preview,.breakdown{padding-left:19px;padding-right:19px}.route-fields{grid-template-columns:1fr 36px 1fr;gap:7px}.field-wrap select{font-size:14px;padding:11px 10px}.swap{width:36px}.options{gap:11px}.control input,.control select{padding:11px 9px}.airport-city{max-width:75px}.equivalents-grid{grid-template-columns:1fr}}
+
+/* Soft cloud decorations on a simple sky-blue background */
+body{position:relative;isolation:isolate;overflow-x:hidden}
+.sky-clouds{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
+.cloud{position:absolute;width:240px;height:64px;border-radius:999px;background:rgba(255,255,255,.68);filter:blur(1px);opacity:.8}
+.cloud:before,.cloud:after{content:"";position:absolute;background:inherit;border-radius:50%}
+.cloud:before{width:100px;height:100px;left:34px;top:-42px}
+.cloud:after{width:135px;height:135px;left:91px;top:-69px}
+.cloud.c1{top:12%;left:-50px;transform:scale(1.05)}
+.cloud.c2{top:31%;right:-80px;transform:scale(.78);opacity:.65}
+.cloud.c3{top:63%;left:3%;transform:scale(.65);opacity:.48}
+.cloud.c4{top:82%;right:7%;transform:scale(.9);opacity:.52}
+.cloud.c5{top:5%;right:26%;transform:scale(.48);opacity:.45}
+</style>
+</head>
+<body>
+<div class="sky-clouds" aria-hidden="true">
+<span class="cloud c1"></span><span class="cloud c2"></span><span class="cloud c3"></span><span class="cloud c4"></span><span class="cloud c5"></span></div>
+<div class="app">
+<header class="topbar">
+  <div class="brand"><span class="brand-mark"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 14.5 21 4l-7 17-3.1-6.1L3 14.5Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="m10.9 14.9 5.3-5.3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span>Flightpath</div>
+  <div class="top-meta"><span class="live-dot"></span><span>Flight emissions estimator</span><span class="hide-small">· No sign-in required</span></div>
+</header>
+<main>
+  <section class="hero">
+    <div><div class="eyebrow">Travel, with more clarity</div><h1>Every journey leaves a trace.</h1><p>Estimate the carbon emissions of your flight. Select your origin and destination airports to map your route and understand its estimated climate impact.</p></div>
+    <div class="tag">✦ &nbsp; Passenger-level estimate</div>
+  </section>
+  <div class="layout">
+    <section>
+      <div class="card">
+        <div class="card-head"><div><h2>Build your journey</h2><p>Select your route and flight details below.</p></div><span class="step">01</span></div>
+        <div class="form-body">
+          <div class="route-fields">
+            <div class="field-wrap"><label class="field-label" for="origin">From Airport</label><select id="origin" aria-describedby="originHint"></select><div class="airport-hint" id="originHint">Toronto Pearson International</div></div>
+            <button class="swap" id="swap" type="button" aria-label="Swap departure and arrival airports" title="Swap airports">⇄</button>
+            <div class="field-wrap"><label class="field-label" for="destination">To Airport</label><select id="destination" aria-describedby="destinationHint"></select><div class="airport-hint" id="destinationHint">London Heathrow</div></div>
+          </div>
+          <div class="options">
+            <div class="control"><label for="cabin">Cabin class</label><select id="cabin"><option value="1">Economy</option><option value="1.5">Premium economy</option><option value="2.9">Business</option><option value="4">First</option></select></div>
+            <div class="control"><label for="passengers">Passengers</label><input id="passengers" type="number" min="1" max="99" value="1" inputmode="numeric"></div>
+          </div>
+          <label class="inline-check"><input id="roundTrip" type="checkbox"> Include return flight</label>
+          <button class="primary" id="calculate" type="button">Calculate flight emissions <span aria-hidden="true">↗</span></button>
+          <div class="error" id="error" role="alert"></div>
+          <p class="fineprint">Results are estimates based on great-circle distance and illustrative passenger emission factors. Actual emissions vary by aircraft, routing, occupancy, and methodology.</p>
+        </div>
+      </div>
+      <div class="card breakdown">
+        <h2>Emission breakdown</h2><p class="sub">How your selections influence the estimate.</p>
+        <div class="bar-label"><span>Route distance</span><strong id="distanceLabel">5,707 km</strong></div><div class="bar-track"><div class="bar-fill" id="distanceBar" style="width:57%"></div></div>
+        <div class="bar-label" style="margin-top:20px"><span>Cabin impact multiplier</span><strong id="cabinLabel">1.0× · Economy</strong></div><div class="bar-track"><div class="bar-fill" id="cabinBar" style="width:25%"></div></div>
+        <div class="comparison"><div class="leaf">↗</div><p id="comparisonText">A route-based estimate gives you a useful starting point for comparing travel choices. Choose your route to update this breakdown.</p></div>
+        
+        <h2 style="margin-top:24px;">Real-world impact comparison</h2>
+        <p class="sub">Per-passenger flight emissions compared to everyday activities.</p>
+        <div class="equivalents-grid">
+          <div class="equiv-card">
+            <div class="equiv-icon">🚗</div>
+            <div class="equiv-label">Gasoline Car Driving</div>
+            <div class="equiv-value" id="carEquiv">5,350 km</div>
+            <div class="equiv-sub">Equivalent driving distance</div>
+          </div>
+          <div class="equiv-card">
+            <div class="equiv-icon">🏠</div>
+            <div class="equiv-label">Home Energy / Heating</div>
+            <div class="equiv-value" id="homeEquiv">85 days</div>
+            <div class="equiv-sub">Average home heating use</div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <aside>
+      <div class="card results" aria-live="polite">
+        <div class="result-banner"><div class="eyebrow">Estimated carbon footprint</div><h2 id="resultTitle">Toronto → London · one way</h2><div class="emissions" id="emissions">1,027 <span>kg CO₂e</span></div><div class="banner-foot"><span class="co2-dot"></span><span id="perPassenger">Per passenger · Economy</span></div></div>
+        <div class="stats">
+          <div class="stat"><div class="stat-label">Total distance</div><div class="stat-value" id="distance">5,707 km</div><div class="stat-sub">Great-circle estimate</div></div>
+          <div class="stat"><div class="stat-label">Flight legs</div><div class="stat-value" id="legs">1</div><div class="stat-sub" id="legsSub">One-way journey</div></div>
+          <div class="stat"><div class="stat-label">Per passenger</div><div class="stat-value" id="perPerson">1,027 kg</div><div class="stat-sub">CO₂-equivalent</div></div>
+          <div class="stat"><div class="stat-label">All passengers</div><div class="stat-value" id="allPeople">1,027 kg</div><div class="stat-sub">Combined estimate</div></div>
+        </div>
+        <div class="route-preview"><div class="route-title">Your flightpath</div><div class="route-line"><div class="airport-node"><div class="airport-code" id="originCode">YYZ</div><div class="airport-city" id="originCity">Toronto</div></div><div class="flight-path"><span class="plane">✈</span></div><div class="airport-node" style="text-align:right"><div class="airport-code" id="destinationCode">LHR</div><div class="airport-city" id="destinationCity">London</div></div></div><div class="route-bottom"><span>Estimated air distance</span><strong id="routeDistance">5,707 km</strong></div></div>
+      </div>
+      <div class="method"><strong>About this estimate</strong><br>Uses a great-circle route distance with an 8% routing uplift and an illustrative economy factor of 90 g CO₂e per passenger-kilometre, adjusted by cabin class. Car comparison is based on an average gasoline passenger vehicle (~0.192 kg CO₂e/km) and home heating based on typical daily residential heating energy emissions (~12 kg CO₂e/day).</div>
+    </aside>
+  </div>
+  <footer class="footer"><span>© 2026 Flightpath · Travel thoughtfully.</span><span>Built with Python & Flask · <a href="https://www.iata.org/en/publications/directories/code-search/" target="_blank" rel="noreferrer">About IATA codes ↗</a></span></footer>
+</main>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const originSelect = $("origin"), destSelect = $("destination");
+const fmt = n => Math.round(n).toLocaleString("en-CA");
+
+const airports = {
+  "YYZ": {"city": "Toronto", "name": "Toronto Pearson International"},
+  "YTZ": {"city": "Toronto", "name": "Billy Bishop Toronto City"},
+  "YVR": {"city": "Vancouver", "name": "Vancouver International"},
+  "YUL": {"city": "Montreal", "name": "Montréal–Trudeau International"},
+  "YOW": {"city": "Ottawa", "name": "Ottawa International"},
+  "YYC": {"city": "Calgary", "name": "Calgary International"},
+  "YEG": {"city": "Edmonton", "name": "Edmonton International"},
+  "YWG": {"city": "Winnipeg", "name": "Winnipeg Richardson International"},
+  "YHZ": {"city": "Halifax", "name": "Halifax Stanfield International"},
+  "JFK": {"city": "New York", "name": "John F. Kennedy International"},
+  "LGA": {"city": "New York", "name": "LaGuardia Airport"},
+  "EWR": {"city": "Newark", "name": "Newark Liberty International"},
+  "LAX": {"city": "Los Angeles", "name": "Los Angeles International"},
+  "SFO": {"city": "San Francisco", "name": "San Francisco International"},
+  "ORD": {"city": "Chicago", "name": "O'Hare International"},
+  "MIA": {"city": "Miami", "name": "Miami International"},
+  "SEA": {"city": "Seattle", "name": "Seattle–Tacoma International"},
+  "BOS": {"city": "Boston", "name": "Logan International"},
+  "ATL": {"city": "Atlanta", "name": "Hartsfield–Jackson Atlanta International"},
+  "DFW": {"city": "Dallas", "name": "Dallas/Fort Worth International"},
+  "DEN": {"city": "Denver", "name": "Denver International"},
+  "IAD": {"city": "Washington, D.C.", "name": "Dulles International"},
+  "HNL": {"city": "Honolulu", "name": "Daniel K. Inouye International"},
+  "LHR": {"city": "London", "name": "London Heathrow"},
+  "LGW": {"city": "London", "name": "London Gatwick"},
+  "CDG": {"city": "Paris", "name": "Charles de Gaulle Airport"},
+  "ORY": {"city": "Paris", "name": "Paris Orly Airport"},
+  "FRA": {"city": "Frankfurt", "name": "Frankfurt Airport"},
+  "AMS": {"city": "Amsterdam", "name": "Amsterdam Airport Schiphol"},
+  "MAD": {"city": "Madrid", "name": "Adolfo Suárez Madrid–Barajas"},
+  "BCN": {"city": "Barcelona", "name": "Barcelona–El Prat Airport"},
+  "FCO": {"city": "Rome", "name": "Leonardo da Vinci–Fiumicino"},
+  "IST": {"city": "Istanbul", "name": "Istanbul Airport"},
+  "DXB": {"city": "Dubai", "name": "Dubai International"},
+  "DOH": {"city": "Doha", "name": "Hamad International"},
+  "DEL": {"city": "Delhi", "name": "Indira Gandhi International"},
+  "BOM": {"city": "Mumbai", "name": "Chhatrapati Shivaji Maharaj International"},
+  "SIN": {"city": "Singapore", "name": "Singapore Changi Airport"},
+  "HKG": {"city": "Hong Kong", "name": "Hong Kong International"},
+  "NRT": {"city": "Tokyo", "name": "Narita International"},
+  "HND": {"city": "Tokyo", "name": "Haneda Airport"},
+  "ICN": {"city": "Seoul", "name": "Incheon International"},
+  "PEK": {"city": "Beijing", "name": "Beijing Capital International"},
+  "PVG": {"city": "Shanghai", "name": "Shanghai Pudong International"},
+  "BKK": {"city": "Bangkok", "name": "Suvarnabhumi Airport"},
+  "SYD": {"city": "Sydney", "name": "Sydney Kingsford Smith"},
+  "MEL": {"city": "Melbourne", "name": "Melbourne Airport"},
+  "AKL": {"city": "Auckland", "name": "Auckland Airport"},
+  "GRU": {"city": "São Paulo", "name": "São Paulo/Guarulhos International"},
+  "MEX": {"city": "Mexico City", "name": "Mexico City International"},
+  "SCL": {"city": "Santiago", "name": "Arturo Merino Benítez International"},
+  "JNB": {"city": "Johannesburg", "name": "O. R. Tambo International"},
+  "CAI": {"city": "Cairo", "name": "Cairo International"},
+  "NBO": {"city": "Nairobi", "name": "Jomo Kenyatta International"}
+};
+
+function populateAirports() {
+  const sortedCodes = Object.keys(airports).sort((a, b) => airports[a].city.localeCompare(airports[b].city));
+  const optionsHtml = sortedCodes.map(code => `<option value="${code}">${code} — ${airports[code].city} (${airports[code].name})</option>`).join('');
+  originSelect.innerHTML = optionsHtml;
+  destSelect.innerHTML = optionsHtml;
+  originSelect.value = "YYZ";
+  destSelect.value = "LHR";
+}
+
+async function calculate() {
+  const o = originSelect.value;
+  const d = destSelect.value;
+  const p = Number($("passengers").value);
+  const factor = Number($("cabin").value);
+  const round = $("roundTrip").checked;
+  const err = $("error");
+  
+  err.classList.remove("show");
+
+  try {
+    const response = await fetch('/api/calculate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ origin: o, destination: d, passengers: p, cabin: factor, roundTrip: round })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      err.textContent = data.error || "An error occurred during calculation.";
+      err.classList.add("show");
+      return;
+    }
+
+    const cabinText = $("cabin").selectedOptions[0].text;
+    const totalDistance = data.distance * data.legs;
+
+    $("originHint").textContent = data.originName;
+    $("destinationHint").textContent = data.destName;
+
+    const carKm = data.perPassenger / 0.192;
+    const heatingDays = data.perPassenger / 12;
+
+    $("resultTitle").textContent = `${data.originCity} → ${data.destCity} · ${data.roundTrip ? "round trip" : "one way"}`;
+    $("emissions").innerHTML = `${fmt(data.total)} <span>kg CO₂e</span>`;
+    $("perPassenger").textContent = `${p === 1 ? "Per passenger" : "All passengers"} · ${cabinText}`;
+    $("distance").textContent = fmt(totalDistance) + " km";
+    $("distanceLabel").textContent = fmt(totalDistance) + " km";
+    $("legs").textContent = data.legs;
+    $("legsSub").textContent = data.roundTrip ? "Return included" : "One-way journey";
+    $("perPerson").textContent = fmt(data.perPassenger) + " kg";
+    $("allPeople").textContent = fmt(data.total) + " kg";
+    $("originCode").textContent = data.originCode;
+    $("destinationCode").textContent = data.destCode;
+    $("originCity").textContent = data.originCity;
+    $("destinationCity").textContent = data.destCity;
+    $("routeDistance").textContent = fmt(data.distance) + " km";
+
+    $("cabinLabel").textContent = `${factor.toFixed(1)}× · ${cabinText}`;
+    $("cabinBar").style.width = Math.min(100, (factor / 4) * 100) + "%";
+    $("distanceBar").style.width = Math.min(100, (data.distance / 15000) * 100) + "%";
+    $("comparisonText").innerHTML = `Your estimate is <strong>${fmt(data.perPassenger)} kg CO₂e per passenger</strong> for this ${data.roundTrip ? "round-trip" : "one-way"} journey in ${cabinText.toLowerCase()}. Try another cabin class or switch on return flight to compare.`;
+
+    $("carEquiv").textContent = fmt(carKm) + " km";
+    $("homeEquiv").textContent = Math.round(heatingDays) + " days";
+
+  } catch (e) {
+    err.textContent = "Unable to connect to the Flask backend server.";
+    err.classList.add("show");
+  }
+}
+
+populateAirports();
+
+$("swap").addEventListener("click", () => {
+  const temp = originSelect.value;
+  originSelect.value = destSelect.value;
+  destSelect.value = temp;
+  calculate();
+});
+
+$("calculate").addEventListener("click", calculate);
+["origin", "destination", "cabin", "passengers", "roundTrip"].forEach(id => $(id).addEventListener("change", calculate));
+
+// Run initial calculation on page load
+calculate();
+</script>
+</body>
+</html>

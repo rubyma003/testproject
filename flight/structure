@@ -1,0 +1,6 @@
+flightpath/
+│
+├── app.py              # Flask backend server & calculation logic
+├── requirements.txt    # Python dependencies
+└── templates/
+    └── index.html      # Your modified HTML file
