@@ -66,59 +66,52 @@ def haversine(lat1, lon1, lat2, lon2):
     d_lat = (lat2 - lat1) * rad
     d_lon = (lon2 - lon1) * rad
     a = math.sin(d_lat / 2)**2 + math.cos(lat1 * rad) * math.cos(lat2 * rad) * math.sin(d_lon / 2)**2
-    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a)) if 'math' not in globals() else 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
     return 6371 * c
 
-@app.route("/")
+@app.route('/')
 def index():
-    return render_template("index.html")
+    return render_template('index.html')
 
-@app.route("/api/calculate", methods=["POST"])
+@app.route('/api/calculate', methods=['POST'])
 def calculate():
-    data = request.get_json() or {}
-    origin = str(data.get("origin", "")).upper().strip()
-    destination = str(data.get("destination", "")).upper().strip()
-    
-    try:
-        passengers = int(data.get("passengers", 1))
-        cabin_factor = float(data.get("cabin", 1.0))
-    except (ValueError, TypeError):
-        return jsonify({"error": "Invalid passenger count or cabin class."}), 400
+    data = request.get_json()
+    o = data.get('origin')
+    d = data.get('destination')
+    passengers = int(data.get('passengers', 1))
+    cabin = float(data.get('cabin', 1))
+    round_trip = bool(data.get('roundTrip', False))
 
-    round_trip = bool(data.get("roundTrip", False))
-
-    if origin not in AIRPORTS:
-        return jsonify({"error": f"“{origin or 'Origin'}” isn't in this demo's airport list. Enter a supported three-letter IATA code."}), 400
-    if destination not in AIRPORTS:
-        return jsonify({"error": f"“{destination or 'Destination'}” isn't in this demo's airport list. Enter a supported three-letter IATA code."}), 400
-    if origin == destination:
+    if o not in AIRPORTS:
+        return jsonify({"error": "Invalid origin airport."}), 400
+    if d not in AIRPORTS:
+        return jsonify({"error": "Invalid destination airport."}), 400
+    if o == d:
         return jsonify({"error": "Choose two different airports to calculate a flight."}), 400
-    if not (1 <= passengers <= 99):
-        return jsonify({"error": "Enter a passenger count from 1 to 99."}), 400
 
-    a = AIRPORTS[origin]
-    b = AIRPORTS[destination]
+    origin_data = AIRPORTS[o]
+    dest_data = AIRPORTS[d]
 
-    distance = haversine(a["lat"], a["lon"], b["lat"], b["lon"])
+    distance = haversine(origin_data["lat"], origin_data["lon"], dest_data["lat"], dest_data["lon"])
     legs = 2 if round_trip else 1
     adjusted_distance = distance * 1.08 * legs
 
-    per_passenger = adjusted_distance * 0.09 * cabin_factor
+    per_passenger = adjusted_distance * 0.09 * cabin
     total = per_passenger * passengers
 
     return jsonify({
-        "originCode": origin,
-        "originCity": a["city"],
-        "originName": a["name"],
-        "destCode": destination,
-        "destCity": b["city"],
-        "destName": b["name"],
         "distance": distance,
         "legs": legs,
         "roundTrip": round_trip,
         "perPassenger": per_passenger,
-        "total": total
+        "total": total,
+        "originCode": o,
+        "destCode": d,
+        "originName": origin_data["name"],
+        "destName": dest_data["name"],
+        "originCity": origin_data["city"],
+        "destCity": dest_data["city"]
     })
 
-if __name__ == "__main__":
-    app.run(debug=True, port=5000)
+if __name__ == '__main__':
+    app.run(debug=True)
